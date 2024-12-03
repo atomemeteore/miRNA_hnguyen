@@ -23,9 +23,8 @@ Vous devez déposer une archive compressée contenant votre programme sur Univer
 """
 
 import re
-
-species_file = "species.txt"
-miRNA_file = "mirna.txt"
+from collections import Counter
+import matplotlib.pyplot as plt
 
 def read_species(species_file):
     liste_species = []
@@ -38,15 +37,12 @@ def read_species(species_file):
                 pass
         return liste_species
     
-print(read_species(species_file))
 
-target_species = read_species(species_file)
-
-def extract_miRNA(fichier,target_species):
+def extract_miRNA(file,target_species):
     species_sequences =  {specie: [] for specie in target_species}
     pattern = re.compile(r"(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+([A-Za-z]+\s+[a-z]+)\s+.*stem-loop\s+([ACGU]+)")
-    with open("mirna.txt","r") as fichier:
-        for line in fichier:
+    with open("mirna.txt","r") as file:
+        for line in file:
             match = pattern.match(line)
             if match:
                 specie = match.group(5)
@@ -55,3 +51,34 @@ def extract_miRNA(fichier,target_species):
                     species_sequences[specie].append(sequence)
     return species_sequences
 
+def percentage(sequences):
+    total_sequences = "".join(sequences)
+    bases_count = Counter(total_sequences)
+    bases_total = sum(bases_count.values())
+    percent = {}
+    for nucleotide in "ACGU":
+        percent[nucleotide] = ((bases_count.get(nucleotide,0))/bases_total)*100
+    return percent
+
+def piechart_bases(percent, title):
+    data = list(percent.values())
+    labels = list(percent.keys())
+    plt.pie(data, labels = labels, autopct='%1.1f%%')
+    plt.title(title)
+    plt.show()
+
+
+def main():
+    species_file = "species.txt"
+    miRNA_file = "mirna.txt"
+    target_species = read_species(species_file)
+    sequences_species = extract_miRNA(miRNA_file,target_species)
+
+
+    for species, sequences in sequences_species.items():
+        percent_data = percentage(sequences)
+        piechart_bases(percent_data, f"Répartition des acides nucléiques pour {species}")
+
+
+if __name__ == "__main__":
+    main()
