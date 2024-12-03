@@ -63,7 +63,8 @@ def percentage(sequences):
 def piechart_bases(percent, title):
     data = list(percent.values())
     labels = list(percent.keys())
-    plt.pie(data, labels = labels, autopct='%1.1f%%')
+    colors = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+    plt.pie(data, labels = labels, autopct='%1.1f%%', colors = colors)
     plt.title(title)
     plt.show()
 
