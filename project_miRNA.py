@@ -39,3 +39,19 @@ def read_species(species_file):
         return liste_species
     
 print(read_species(species_file))
+
+target_species = read_species(species_file)
+
+def extract_miRNA(fichier,target_species):
+    species_sequences =  {specie: [] for specie in target_species}
+    pattern = re.compile(r"(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+([A-Za-z]+\s+[a-z]+)\s+.*stem-loop\s+([ACGU]+)")
+    with open("mirna.txt","r") as fichier:
+        for line in fichier:
+            match = pattern.match(line)
+            if match:
+                specie = match.group(5)
+                sequence = match.group(6)
+                if specie in target_species:
+                    species_sequences[specie].append(sequence)
+    return species_sequences
+
