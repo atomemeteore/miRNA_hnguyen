@@ -21,6 +21,8 @@ acides nucléiques (A, C, G, U) et qui affiche les résultats sous la forme de c
 par espèce et un pour toutes les espèces contenues dans le fichier species.txt).
 Vous devez déposer une archive compressée contenant votre programme sur Universitice pour le 20 décembre 2024.
 """
+species_file = "species.txt"
+miRNA_file = "mirna.txt"
 
 import re
 from collections import Counter
@@ -40,13 +42,13 @@ def read_species(species_file):
 
 def extract_miRNA(file,target_species):
     species_sequences =  {specie: [] for specie in target_species}
-    pattern = re.compile(r"(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+([A-Za-z]+\s+[a-z]+)\s+.*stem-loop\s+([ACGU]+)")
-    with open("mirna.txt","r") as file:
+    pattern = re.compile(r'^\d+\sMI\d+\s\w+(?:-\w+)*\s((?:[A-Z][a-z]+\s[a-z]+))\s.*?\sstem-loop\s([AUGC]+)\s\d+\s\d+$')
+    with open(miRNA_file,"r") as file:
         for line in file:
             match = pattern.match(line)
             if match:
-                specie = match.group(5)
-                sequence = match.group(6)
+                specie = match.group(1)
+                sequence = match.group(2)
                 if specie in target_species:
                     species_sequences[specie].append(sequence)
     return species_sequences
@@ -70,8 +72,6 @@ def piechart_bases(percent, title):
 
 
 def main():
-    species_file = "species.txt"
-    miRNA_file = "mirna.txt"
     target_species = read_species(species_file)
     sequences_species = extract_miRNA(miRNA_file,target_species)
 
