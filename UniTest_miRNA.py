@@ -53,19 +53,17 @@ class TestMiRNAExtraction(unittest.TestCase):
     def setUp(self):
         self.valid_extract = "valid_miRNA.txt"
         with open(self.valid_extract, "w") as validExtract:
-            validExtract.write("64685 MI0000001 cel-let-7 cel-let-7L Caenorhabditis elegans let-7 stem-loop UACAC let-7 is found on chromosome X in Caenorhabditis elegans [1] and pairs to sites within the 3' untranslated region (UTR) of target mRNAs, specifying the translational repression of these mRNAs and triggering the transition to late-larval and adult stages [2]. 58 0\n")
-            validExtract.write("64790 MI0000114 hsa-mir-107 hsa-mir-107-10 Homo sapiens miR-107 stem-loop CUCUC This miRNA was identified by homology to miR-103 [1], and later verified by cloning in human [2]. 22 0\n")
-            validExtract.write("64795 MI0000119 dme-mir-2b-1 Drosophila melanogaster miR-2b-1 stem-loop CUUCA Stark et al. [2] have identified targets for miR-2 in Drosophila using computational prediction followed by experimental validation. miR-2 regulates the proapoptotic genes reaper, grim and sickle, suggesting that it may be involved in the control of apoptosis. 44 0")
+            validExtract.write("64690 MI0000006 cel-mir-35 Caenorhabditis elegans miR-35 stem-loop UCUCGGAUCAGAUCGAGCCAUUGCUGGUUUCUUCCACAGUGGUACUUUCCAUUAGAACUAUCACCGGGUGGAAACUAGCAGUGGCUCGAUCUUUUCC 58 0\n")
+            validExtract.write("64818 MI0000142 mmu-mir-27b Mus musculus miR-27b stem-loop AGGUGCAGAGCUUAGCUGAUUGGUGAACAGUGAUUGGUUUCCGCUUUGUUCACAGUGGCUAAGUUCUGCACCU 30 0\n")
+            validExtract.write("64808 MI0000132 dme-mir-12 Drosophila melanogaster miR-12 stem-loop UACGGUUGAGUAUUACAUCAGGUACUGGUGUGCCUUAAAUCCAACAACCAGUACUUAUGUCAUACUACGCCGUG 44 0\n")
 
         self.target_species = ["Caenorhabditis elegans", "Homo sapiens", "Drosophila melanogaster"]
 
     def test_extract_miRNAValid(self):
-        resultat = extract_miRNA(self.valid_extract, self.target_species)
-        print("Résultat extrait:", resultat)
-        attendu = {"Caenorhabditis elegans": ["UACAC"], "Homo sapiens": ["CUCUC"], "Drosophila melanogaster": ["CUUCA"]}
+        f = self.valid_extract
+        resultat = extract_miRNA(f, self.target_species)
+        attendu = {"Caenorhabditis elegans": ["UCUCGGAUCAGAUCGAGCCAUUGCUGGUUUCUUCCACAGUGGUACUUUCCAUUAGAACUAUCACCGGGUGGAAACUAGCAGUGGCUCGAUCUUUUCC"], "Mus musculus": ["AGGUGCAGAGCUUAGCUGAUUGGUGAACAGUGAUUGGUUUCCGCUUUGUUCACAGUGGCUAAGUUCUGCACCU"], "Drosophila melanogaster": ["UACGGUUGAGUAUUACAUCAGGUACUGGUGUGCCUUAAAUCCAACAACCAGUACUUAUGUCAUACUACGCCGUG"]}
         self.assertEqual(resultat, attendu)
-
-
     
     def tearDown(self):
         os.remove("valid_miRNA.txt")

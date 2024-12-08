@@ -43,7 +43,7 @@ def read_species(species_file):
 def extract_miRNA(file,target_species):
     species_sequences =  {specie: [] for specie in target_species}
     pattern = re.compile(r'^\d+\sMI\d+\s\w+(?:-\w+)*\s((?:[A-Z][a-z]+\s[a-z]+))\s.*?\sstem-loop\s([AUGC]+)\s\d+\s\d+$')
-    with open(miRNA_file,"r") as file:
+    with open(file,"r") as file:
         for line in file:
             match = pattern.match(line)
             if match:
